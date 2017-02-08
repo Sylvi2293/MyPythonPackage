@@ -1,13 +1,13 @@
 #' calculateRFM
 #'
 # Description
-#'	Calculate the a weighted RMF score: recency, frequency, and monetary for every customers
+#'	Calculate the a weighted RFM score: recency, frequency, and monetary for every customers
 #
 # Arguments
 #'@param	data - A data.table containing the transaction rececord details for every customer.
-#'@param	r -  Weight of recency.
-#'@param	f -  Weight of frequency.
-#'@param	m -  Weight of monetary.
+#'@param	weight_recency -  Weight of recency.
+#'@param	weight_frequency -  Weight of frequency.
+#'@param	weight_monetary -  Weight of monetary.
 #'
 #' @details
 #' \code{data} contains the transactional data. The dataset must contain a
@@ -18,8 +18,9 @@
 # Return Value
 #'@return	Returns a  data.data containing the recency, frequency and monetary
 #'score as well as the weighted final score and the group membership.
+#'@export
 
-calulateRFM <- function(data, weight_recency=1, weight_frequency=1, weight_monetary=1){
+calculateRFM <- function(data, weight_recency=1, weight_frequency=1, weight_monetary=1){
 
   # Make sure data is a data.table
   data <- data.table(data)
@@ -30,7 +31,7 @@ calulateRFM <- function(data, weight_recency=1, weight_frequency=1, weight_monet
   weight_monetary2 <- weight_monetary/sum(weight_recency, weight_frequency, weight_monetary)
 
   # RFM measures
-  max.Date <- max(transactions$TransDate)
+  max.Date <- max(data$TransDate)
   temp <- data[,list(
     recency = as.numeric(max.Date - max(TransDate)),
     frequency = .N,
